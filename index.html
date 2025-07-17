@@ -2,65 +2,391 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YouTube SEO Tool (Offline Version)</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>YT SEO Pro - SEO Optimizer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --background: #F8FAFC;
+      --card-bg: #FFF;
+      --accent-red: #FF5252;
+      --accent-blue: #2962FF;
+      --accent-purple: #AB47BC;
+      --accent-pink: #FFEBEE;
+      --text: #22223B;
+      --muted: #636363;
+      --border: #E0E0E0;
+      --shadow: 0 0 16px rgba(41,98,255,0.09);
+    }
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--text);
+      font-family: 'Inter', Arial, sans-serif;
+    }
+    .header {
+      padding: 2rem 0 1rem 0;
+      background: var(--card-bg);
+      border-bottom: 1px solid #ECECEC;
+      display: flex;
+      align-items: center;
+    }
+    .logo {
+      margin-left: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .logo-title {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .logo-sub {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--accent-blue);
+      letter-spacing: 0.5px;
+    }
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .video-type-selection {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .video-type-card {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 18px;
+      padding: 1.5rem 1.5rem 1rem 1.5rem;
+      min-width: 260px;
+      flex: 1 1 240px;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      cursor: pointer;
+      position: relative;
+      transition: border-color 0.25s, box-shadow 0.2s;
+    }
+    .video-type-card.selected {
+      box-shadow: var(--shadow);
+      border-width: 2.5px;
+    }
+    .icon-wrap {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      margin-top: 0.5rem;
+      color: #fff;
+      font-size: 32px;
+      transition: background 0.3s;
+    }
+    .type-info { flex: 1; }
+    .type-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .selected-label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #fff;
+      border-radius: 7px;
+      padding: 0.1rem 0.7rem;
+      margin-left: 0.7rem;
+      position: absolute;
+      top: 1.5rem;
+      right: 2rem;
+      box-shadow: 0 2px 8px rgba(41,98,255,0.08);
+    }
+    .type-info ul {
+      margin: 0.7rem 0 0 0;
+      padding-left: 1rem;
+      font-size: 0.98rem;
+      color: var(--muted);
+    }
+    .seo-form-section {
+      margin-top: 2rem;
+      padding: 2rem;
+      border-radius: 18px;
+      background: var(--accent-pink);
+      box-shadow: 0 0 10px rgba(255,82,82,0.07);
+    }
+    .seo-form-header {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-bottom: 1.2rem;
+    }
+    .seo-header-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--accent-red);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 24px;
+    }
+    .seo-header-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .seo-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .form-row {
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .form-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      min-width: 200px;
+    }
+    .form-group.full-width {
+      flex: 2;
+    }
+    label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+    input, textarea, select {
+      padding: 0.65rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--card-bg);
+      font-size: 1rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--accent-blue);
+    }
+    .generate-btn {
+      margin-top: 1.5rem;
+      padding: 0.9rem 0;
+      border-radius: 9px;
+      font-size: 1.17rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--accent-red);
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 10px rgba(255,82,82,0.06);
+    }
+    .generate-btn:hover { background: #E53935; }
+    .seo-result-section {
+      margin-top: 2.5rem;
+      background: var(--card-bg);
+      border-radius: 14px;
+      box-shadow: 0 0 8px rgba(41,98,255,0.06);
+      padding: 2rem;
+      max-width: 800px;
+    }
+    .seo-result-section h2 {
+      font-size: 1.2rem;
+      color: var(--text);
+      margin-bottom: 1.3rem;
+    }
+    .result-item {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      word-break: break-word;
+    }
+    .result-item strong {
+      margin-right: 0.4rem;
+      color: var(--accent-blue);
+    }
+    @media (max-width: 900px) {
+      .container { padding: 1rem; }
+      .video-type-selection { gap: 1rem; }
+      .video-type-card { min-width: 180px; padding: 1rem; }
+      .seo-form-section { padding: 1rem; }
+    }
+    @media (max-width: 600px) {
+      .video-type-selection { flex-direction: column; }
+      .video-type-card { min-width: unset; width: 100%; }
+      .header { padding: 1rem 0 0.5rem 0; }
+      .logo { margin-left: 1rem; }
+      .container { padding: 0.5rem; }
+    }
+  </style>
 </head>
-<body class="bg-gray-100 p-6 font-sans">
-  <h1 class="text-3xl font-bold text-center mb-6">YouTube SEO Tool</h1>
-
-  <div class="max-w-3xl mx-auto">
-    <label class="block mb-2 font-medium">Main Topic:</label>
-    <input type="text" id="videoTopic" class="w-full p-3 mb-4 border border-gray-300 rounded" placeholder="What's your video about?">
-
-    <label class="block mb-2 font-medium">Current Title (Optional):</label>
-    <input type="text" id="currentTitle" class="w-full p-3 mb-4 border border-gray-300 rounded">
-
-    <label class="block mb-2 font-medium">Additional Context (Optional):</label>
-    <textarea id="additionalContext" class="w-full p-3 mb-4 border border-gray-300 rounded" rows="3"></textarea>
-
-    <button id="generateBtn" class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded mb-6">Generate</button>
-
-    <div class="bg-white shadow p-4 rounded mb-4">
-      <label class="font-medium">Generated Title:</label>
-      <textarea id="outputTitle" class="w-full border mt-1 p-2 rounded bg-gray-100" rows="2" readonly></textarea>
-    </div>
-
-    <div class="bg-white shadow p-4 rounded mb-4">
-      <label class="font-medium">Generated Description:</label>
-      <textarea id="outputDescription" class="w-full border mt-1 p-2 rounded bg-gray-100" rows="4" readonly></textarea>
-    </div>
-
-    <div class="bg-white shadow p-4 rounded mb-4">
-      <label class="font-medium">Generated Hashtags:</label>
-      <textarea id="outputHashtags" class="w-full border mt-1 p-2 rounded bg-gray-100" rows="2" readonly></textarea>
-    </div>
-
-    <div class="bg-white shadow p-4 rounded mb-4">
-      <label class="font-medium">Generated Keywords:</label>
-      <textarea id="outputKeywords" class="w-full border mt-1 p-2 rounded bg-gray-100" rows="2" readonly></textarea>
-    </div>
-
-    <div class="bg-white shadow p-4 rounded mb-4">
-      <label class="font-medium">SEO-Friendly Filename:</label>
-      <textarea id="outputFilename" class="w-full border mt-1 p-2 rounded bg-gray-100" rows="1" readonly></textarea>
+<body>
+  <div class="header">
+    <div class="logo">
+      <span class="logo-title">YT SEO Pro</span>
+      <span class="logo-sub">SEO Optimizer</span>
     </div>
   </div>
-
+  <div class="container">
+    <section class="video-type-selection" id="video-types">
+      <!-- Cards will be injected here -->
+    </section>
+    <section class="seo-form-section">
+      <div class="seo-form-header">
+        <span class="seo-header-icon">&#128196;</span>
+        <span class="seo-header-title">SEO Optimization</span>
+      </div>
+      <form class="seo-form" id="seo-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="title">Current Title</label>
+            <input type="text" id="title" name="title" placeholder="Enter your current video title..." required>
+          </div>
+          <div class="form-group">
+            <label for="topic">Main Topic</label>
+            <input type="text" id="topic" name="topic" placeholder="What's your video about?" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="audience">Target Audience</label>
+            <input type="text" id="audience" name="audience" placeholder="Who is this video for?">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="context">Additional Context (Optional)</label>
+            <textarea id="context" name="context" placeholder="Any specific keywords, competitors, or additional information..." rows="2"></textarea>
+          </div>
+        </div>
+        <button type="submit" class="generate-btn">Generate SEO Optimization</button>
+      </form>
+    </section>
+    <section class="seo-result-section" id="seo-results" style="display:none;">
+      <h2>SEO Results</h2>
+      <div class="result-item"><span>&#128196;</span> <strong>Title:</strong> <span id="res-title"></span></div>
+      <div class="result-item"><span>&#128196;</span> <strong>Description:</strong> <span id="res-desc"></span></div>
+      <div class="result-item"><span>&#x23;</span> <strong>Hashtags:</strong> <span id="res-hashtags"></span></div>
+      <div class="result-item"><span>&#128278;</span> <strong>Keywords:</strong> <span id="res-keywords"></span></div>
+      <div class="result-item"><span>&#128459;</span> <strong>Filename:</strong> <span id="res-filename"></span></div>
+    </section>
+  </div>
   <script>
-    document.getElementById('generateBtn').addEventListener('click', () => {
-      const topic = document.getElementById('videoTopic').value.trim();
-      const title = document.getElementById('currentTitle').value.trim();
-      const context = document.getElementById('additionalContext').value.trim();
+    // Video type data
+    const videoTypes = [
+      {
+        key: "regular",
+        title: "Regular Video",
+        description: [
+          "Standard YouTube videos with full-length content",
+          "Long-form content",
+          "Detailed descriptions",
+          "Comprehensive tags"
+        ],
+        icon: '<span class="icon-wrap" style="background:var(--accent-blue);">&#128250;</span>',
+        color: "var(--accent-blue)"
+      },
+      {
+        key: "live",
+        title: "Live Stream",
+        description: [
+          "Real-time streaming content",
+          "Live engagement",
+          "Real-time optimization",
+          "Stream-specific tags"
+        ],
+        icon: '<span class="icon-wrap" style="background:var(--accent-red);">&#128246;</span>',
+        color: "var(--accent-red)"
+      },
+      {
+        key: "short",
+        title: "YouTube Shorts",
+        description: [
+          "Vertical short-form videos under 60 seconds",
+          "Viral potential",
+          "Trend-focused",
+          "Mobile-first"
+        ],
+        icon: '<span class="icon-wrap" style="background:var(--accent-purple);">&#128241;</span>',
+        color: "var(--accent-purple)"
+      }
+    ];
 
-      if (!topic) return alert('Please enter a main topic.');
+    // Render video type selection
+    const videoTypesDiv = document.getElementById('video-types');
+    let selectedType = "regular";
 
-      // Dummy logic (replace with your local AI or rules if offline use is needed)
-      document.getElementById('outputTitle').value = `Top Secrets About ${topic} You Didn\'t Know! 🔥`;
-      document.getElementById('outputDescription').value = `In this video, we explore everything you need to know about ${topic}. ${title ? 'We begin by looking at: ' + title + '.' : ''} ${context ? context : ''}`;
-      document.getElementById('outputHashtags').value = `#${topic.replace(/\s+/g, '')} #viral #YouTubeTips`;
-      document.getElementById('outputKeywords').value = `${topic}, viral video, YouTube SEO, video tips`;
-      document.getElementById('outputFilename').value = `${topic.toLowerCase().replace(/\s+/g, '-')}-seo-guide.mp4`;
+    function renderVideoTypes() {
+      videoTypesDiv.innerHTML = "";
+      videoTypes.forEach(type => {
+        const card = document.createElement("div");
+        card.className = "video-type-card" + (selectedType === type.key ? " selected" : "");
+        card.innerHTML = `
+          ${type.icon}
+          <div class="type-info">
+            <span class="type-title">${type.title}</span>
+            ${selectedType === type.key ? `<span class="selected-label" style="background:${type.color}">Selected</span>` : ""}
+            <ul>${type.description.map(d => `<li>${d}</li>`).join("")}</ul>
+          </div>
+        `;
+        card.onclick = () => {
+          selectedType = type.key;
+          renderVideoTypes();
+        };
+        videoTypesDiv.appendChild(card);
+      });
+    }
+    renderVideoTypes();
+
+    // Form logic
+    document.getElementById("seo-form").addEventListener("submit", function(e){
+      e.preventDefault();
+      const title = document.getElementById("title").value.trim();
+      const topic = document.getElementById("topic").value.trim();
+      const audience = document.getElementById("audience").value.trim();
+      const context = document.getElementById("context").value.trim();
+
+      if(!title || !topic) {
+        alert("Please fill out the required fields.");
+        return;
+      }
+
+      // Generate SEO
+      const seoTitle = `${title} | ${topic}${selectedType === "short" ? " #Shorts" : ""}`;
+      const description = `Learn all about ${topic} for ${audience || "all audiences"}.\n${context}`;
+      const hashtags = ["#YouTube", "#SEO", "#Viral", ...topic.split(" ").map(w => "#" + w.replace(/[^\w]/g,""))];
+      const keywords = [
+        topic,
+        ...(context ? context.split(",").map(w => w.trim()) : []),
+        "YouTube SEO",
+        selectedType === "short" ? "Shorts" : selectedType === "live" ? "Live Stream" : "Regular Video"
+      ];
+      const filename = `${title.replace(/[^a-zA-Z0-9]/g, "_")}_${selectedType}.mp4`;
+
+      // Show results
+      document.getElementById("res-title").textContent = seoTitle;
+      document.getElementById("res-desc").textContent = description;
+      document.getElementById("res-hashtags").textContent = hashtags.join(" ");
+      document.getElementById("res-keywords").textContent = keywords.join(", ");
+      document.getElementById("res-filename").textContent = filename;
+
+      document.getElementById("seo-results").style.display = "block";
+      document.getElementById("seo-results").scrollIntoView({behavior:"smooth"});
     });
   </script>
 </body>
