@@ -1,417 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube SEO Tool</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa; /* Lighter gray background */
-            display: flex; /* Ensure main content centers */
-            justify-content: center;
-            align-items: flex-start; /* Align to top */
-            min-height: 100vh; /* Full viewport height */
-            padding: 2rem 1rem; /* Add some padding around the content */
-        }
-        .card {
-            background-color: #ffffff;
-            border-radius: 1rem; /* Rounded corners */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Softer shadow */
-        }
-        .video-type-card {
-            border: 2px solid #e0e0e0; /* Light gray border */
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .video-type-card.selected {
-            border-color: #d81b60; /* Deep pink border for selected */
-            box-shadow: 0 0 0 3px rgba(216, 27, 96, 0.2); /* Pink glow for selected */
-        }
-        .btn-primary {
-            background-color: #d81b60; /* Deep pink */
-            color: #ffffff;
-            padding: 0.75rem 2rem;
-            border-radius: 0.75rem;
-            transition: background-color 0.2s, transform 0.1s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .btn-primary:hover {
-            background-color: #c2185b; /* Darker pink on hover */
-            transform: translateY(-1px);
-        }
-        .btn-secondary {
-            background-color: #f0f2f5; /* Lighter gray for copy buttons */
-            color: #495057; /* Darker gray */
-            padding: 0.6rem 1.2rem;
-            border-radius: 0.5rem;
-            transition: background-color 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .btn-secondary:hover {
-            background-color: #e0e0e0; /* Slightly darker gray on hover */
-        }
-        textarea, input[type="text"] {
-            border: 1px solid #e0e0e0; /* Light gray border for inputs */
-            border-radius: 0.5rem;
-            padding: 0.75rem 1rem;
-            color: #343a40; /* Dark text */
-            background-color: #fdfdfe; /* Very light background */
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        textarea:focus, input[type="text"]:focus {
-            outline: none;
-            border-color: #d81b60; /* Deep pink focus border */
-            box-shadow: 0 0 0 2px rgba(216, 27, 96, 0.2);
-        }
-        .loading-spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-left-color: #ffffff; /* White spinner for pink button */
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-            display: none; /* Hidden by default */
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .message-box {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #4CAF50; /* Green for success */
-            color: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-        .message-box.show {
-            display: block;
-            opacity: 1;
-        }
-        /* Custom radio button styling */
-        .hidden-radio {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .video-type-label {
-            cursor: pointer;
-            display: block;
-            padding: 1.5rem;
-            text-align: center;
-            border-radius: 1rem;
-            transition: all 0.2s ease-in-out;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        .video-type-label .icon {
-            font-size: 2.5rem;
-            color: #d81b60; /* Deep pink icon */
-        }
-        .video-type-label .title {
-            font-weight: 600;
-            color: #343a40;
-            font-size: 1.125rem;
-        }
-        .video-type-label .description {
-            font-size: 0.875rem;
-            color: #6c757d;
-        }
-        .hidden-radio:checked + .video-type-label {
-            border-color: #d81b60;
-            box-shadow: 0 0 0 3px rgba(216, 27, 96, 0.2);
-            background-color: #fff5f8; /* Very light pink background for selected */
-        }
-        .hidden-radio:focus + .video-type-label {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(216, 27, 96, 0.4);
-        }
-        .status-box {
-            background-color: #fff5f8; /* Light pink background */
-            border: 1px solid #f8bbd0; /* Lighter pink border */
-            border-radius: 0.75rem;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            color: #d81b60; /* Deep pink text */
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube SEO Tool (Offline Version)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="flex flex-col items-center">
-    <!-- Main Content -->
-    <main class="w-full max-w-4xl p-6 lg:p-10">
-        <!-- YT SEO Pro Title -->
-        <h1 class="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-8">YT SEO Pro</h1>
+<body class="bg-gray-100 p-6 font-sans">
+  <h1 class="text-3xl font-bold text-center mb-6">YouTube SEO Tool</h1>
 
-        <!-- SEO Optimization Status Box -->
-        <div class="status-box mb-8">
-            <i class="fas fa-cogs text-2xl"></i>
-            <span class="text-xl">SEO Optimization</span>
-        </div>
+  <div class="max-w-3xl mx-auto">
+    <label class="block mb-2 font-medium">Main Topic:</label>
+    <input type="text" id="videoTopic" class="w-full p-3 mb-4 border border-gray-300 rounded" placeholder="What's your video about?">
 
-        <!-- Video Type Selection -->
-        <div class="mb-8">
-            <label class="block text-gray-700 text-lg font-medium mb-4">Select Video Type:</label>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="card video-type-card selected">
-                    <input type="radio" name="videoType" value="regular" id="radioRegular" checked class="hidden-radio">
-                    <label for="radioRegular" class="video-type-label">
-                        <i class="fas fa-video icon"></i>
-                        <span class="title">Regular Video</span>
-                        <span class="description text-center">Standard YouTube videos with full-length content</span>
-                        <span class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">Selected</span>
-                    </label>
-                </div>
-                <div class="card video-type-card">
-                    <input type="radio" name="videoType" value="live" id="radioLive" class="hidden-radio">
-                    <label for="radioLive" class="video-type-label">
-                        <i class="fas fa-broadcast-tower icon"></i>
-                        <span class="title">Live Stream</span>
-                        <span class="description text-center">Real-time streaming content</span>
-                    </label>
-                </div>
-                <div class="card video-type-card">
-                    <input type="radio" name="videoType" value="short" id="radioShort" class="hidden-radio">
-                    <label for="radioShort" class="video-type-label">
-                        <i class="fas fa-mobile-alt icon"></i>
-                        <span class="title">YouTube Shorts</span>
-                        <span class="description text-center">Vertical short-form videos under 60 seconds</span>
-                    </label>
-                </div>
-            </div>
-        </div>
+    <label class="block mb-2 font-medium">Current Title (Optional):</label>
+    <input type="text" id="currentTitle" class="w-full p-3 mb-4 border border-gray-300 rounded">
 
-        <!-- Video Topic Input -->
-        <div class="mb-8">
-            <label for="videoTopic" class="block text-gray-700 text-lg font-medium mb-2">Main Topic:</label>
-            <input type="text" id="videoTopic" class="w-full" placeholder="What's your video about? e.g., How to make sourdough bread">
-        </div>
+    <label class="block mb-2 font-medium">Additional Context (Optional):</label>
+    <textarea id="additionalContext" class="w-full p-3 mb-4 border border-gray-300 rounded" rows="3"></textarea>
 
-        <!-- Generate Button -->
-        <div class="text-center mb-10">
-            <button id="generateBtn" class="btn-primary flex items-center justify-center mx-auto">
-                Generate SEO Suggestions
-                <div id="loadingSpinner" class="loading-spinner ml-3"></div>
-            </button>
-        </div>
+    <button id="generateBtn" class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded mb-6">Generate</button>
 
-        <!-- Output Sections -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Title -->
-            <div class="p-6 card">
-                <label for="outputTitle" class="block text-gray-700 text-lg font-medium mb-3">YouTube Title Suggestion:</label>
-                <textarea id="outputTitle" rows="2" class="w-full bg-gray-50" readonly placeholder="Your generated title will appear here."></textarea>
-                <button onclick="copyToClipboard('outputTitle')" class="btn-secondary mt-3 w-full">
-                    <i class="fas fa-copy mr-2"></i> Copy Title
-                </button>
-            </div>
+    <div class="bg-white shadow p-4 rounded mb-4">
+      <label class="font-medium">Generated Title:</label>
+      <textarea id="outputTitle" class="w-full border mt-1 p-2 rounded bg-gray-100" rows="2" readonly></textarea>
+    </div>
 
-            <!-- Description -->
-            <div class="p-6 card">
-                <label for="outputDescription" class="block text-gray-700 text-lg font-medium mb-3">YouTube Description Template:</label>
-                <textarea id="outputDescription" rows="6" class="w-full bg-gray-50" readonly placeholder="Your generated description template will appear here."></textarea>
-                <button onclick="copyToClipboard('outputDescription')" class="btn-secondary mt-3 w-full">
-                    <i class="fas fa-copy mr-2"></i> Copy Description
-                </button>
-            </div>
+    <div class="bg-white shadow p-4 rounded mb-4">
+      <label class="font-medium">Generated Description:</label>
+      <textarea id="outputDescription" class="w-full border mt-1 p-2 rounded bg-gray-100" rows="4" readonly></textarea>
+    </div>
 
-            <!-- Hashtags -->
-            <div class="p-6 card">
-                <label for="outputHashtags" class="block text-gray-700 text-lg font-medium mb-3">YouTube Hashtag Suggestions:</label>
-                <textarea id="outputHashtags" rows="3" class="w-full bg-gray-50" readonly placeholder="Your generated hashtags will appear here."></textarea>
-                <button onclick="copyToClipboard('outputHashtags')" class="btn-secondary mt-3 w-full">
-                    <i class="fas fa-copy mr-2"></i> Copy Hashtags
-                </button>
-            </div>
+    <div class="bg-white shadow p-4 rounded mb-4">
+      <label class="font-medium">Generated Hashtags:</label>
+      <textarea id="outputHashtags" class="w-full border mt-1 p-2 rounded bg-gray-100" rows="2" readonly></textarea>
+    </div>
 
-            <!-- Keyword Tags -->
-            <div class="p-6 card">
-                <label for="outputKeywords" class="block text-gray-700 text-lg font-medium mb-3">YouTube Keyword Tag Suggestions:</label>
-                <textarea id="outputKeywords" rows="3" class="w-full bg-gray-50" readonly placeholder="Your generated keyword tags will appear here."></textarea>
-                <button onclick="copyToClipboard('outputKeywords')" class="btn-secondary mt-3 w-full">
-                    <i class="fas fa-copy mr-2"></i> Copy Keyword Tags
-                </button>
-            </div>
+    <div class="bg-white shadow p-4 rounded mb-4">
+      <label class="font-medium">Generated Keywords:</label>
+      <textarea id="outputKeywords" class="w-full border mt-1 p-2 rounded bg-gray-100" rows="2" readonly></textarea>
+    </div>
 
-            <!-- Filename -->
-            <div class="p-6 card md:col-span-2">
-                <label for="outputFilename" class="block text-gray-700 text-lg font-medium mb-3">SEO-Friendly Filename Suggestion:</label>
-                <textarea id="outputFilename" rows="1" class="w-full bg-gray-50" readonly placeholder="Your generated filename will appear here."></textarea>
-                <button onclick="copyToClipboard('outputFilename')" class="btn-secondary mt-3 w-full">
-                    <i class="fas fa-copy mr-2"></i> Copy Filename
-                </button>
-            </div>
-        </div>
-    </main>
+    <div class="bg-white shadow p-4 rounded mb-4">
+      <label class="font-medium">SEO-Friendly Filename:</label>
+      <textarea id="outputFilename" class="w-full border mt-1 p-2 rounded bg-gray-100" rows="1" readonly></textarea>
+    </div>
+  </div>
 
-    <div id="messageBox" class="message-box"></div>
+  <script>
+    document.getElementById('generateBtn').addEventListener('click', () => {
+      const topic = document.getElementById('videoTopic').value.trim();
+      const title = document.getElementById('currentTitle').value.trim();
+      const context = document.getElementById('additionalContext').value.trim();
 
-    <script>
-        const generateBtn = document.getElementById('generateBtn');
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const videoTopicInput = document.getElementById('videoTopic');
-        const outputTitle = document.getElementById('outputTitle');
-        const outputDescription = document.getElementById('outputDescription');
-        const outputHashtags = document.getElementById('outputHashtags');
-        const outputKeywords = document.getElementById('outputKeywords');
-        const outputFilename = document.getElementById('outputFilename');
-        const messageBox = document.getElementById('messageBox');
+      if (!topic) return alert('Please enter a main topic.');
 
-        // Event listeners for video type selection to update UI
-        document.querySelectorAll('input[name="videoType"]').forEach(radio => {
-            radio.addEventListener('change', (event) => {
-                document.querySelectorAll('.video-type-card').forEach(card => {
-                    card.classList.remove('selected');
-                    card.querySelector('.absolute')?.remove(); // Remove "Selected" tag
-                });
-                const selectedCard = event.target.closest('.video-type-card');
-                selectedCard.classList.add('selected');
-                const selectedTag = document.createElement('span');
-                selectedTag.className = 'absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full';
-                selectedTag.textContent = 'Selected';
-                selectedCard.querySelector('label').appendChild(selectedTag);
-            });
-        });
-
-        // Initialize the "Selected" tag on page load for the default checked radio
-        document.addEventListener('DOMContentLoaded', () => {
-            const initialSelectedRadio = document.querySelector('input[name="videoType"]:checked');
-            if (initialSelectedRadio) {
-                const initialSelectedCard = initialSelectedRadio.closest('.video-type-card');
-                initialSelectedCard.classList.add('selected');
-                const selectedTag = document.createElement('span');
-                selectedTag.className = 'absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full';
-                selectedTag.textContent = 'Selected';
-                initialSelectedCard.querySelector('label').appendChild(selectedTag);
-            }
-        });
-
-        // Function to show a temporary message
-        function showMessage(message, type = 'success') {
-            messageBox.textContent = message;
-            messageBox.className = 'message-box show'; // Reset classes and show
-            if (type === 'success') {
-                messageBox.style.backgroundColor = '#4CAF50'; // Green
-            } else if (type === 'error') {
-                messageBox.style.backgroundColor = '#f44336'; // Red
-            }
-            setTimeout(() => {
-                messageBox.classList.remove('show');
-            }, 3000); // Hide after 3 seconds
-        }
-
-        // Function to copy text to clipboard
-        function copyToClipboard(elementId) {
-            const element = document.getElementById(elementId);
-            if (element) {
-                element.select();
-                element.setSelectionRange(0, 99999); // For mobile devices
-                try {
-                    document.execCommand('copy');
-                    showMessage('Copied to clipboard!');
-                } catch (err) {
-                    console.error('Failed to copy text: ', err);
-                    showMessage('Failed to copy text.', 'error');
-                }
-            }
-        }
-
-        // Main generation logic - now uses templates instead of API
-        generateBtn.addEventListener('click', () => {
-            const videoType = document.querySelector('input[name="videoType"]:checked').value;
-            const videoTopic = videoTopicInput.value.trim();
-
-            if (!videoTopic) {
-                showMessage('Please enter the main video topic.', 'error');
-                return;
-            }
-
-            loadingSpinner.style.display = 'block'; // Show spinner briefly
-            generateBtn.disabled = true; // Disable button
-
-            // Simulate generation time
-            setTimeout(() => {
-                populateOutputFields(videoType, videoTopic);
-                showMessage('Suggestions generated!');
-                loadingSpinner.style.display = 'none'; // Hide spinner
-                generateBtn.disabled = false; // Enable button
-            }, 800); // Short delay to show spinner
-        });
-
-        // Function to populate output fields with template-based suggestions
-        function populateOutputFields(videoType, videoTopic) {
-            const formattedTopic = videoTopic.toLowerCase().replace(/\s+/g, '-');
-            const capitalizedTopic = videoTopic.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-
-            // Title Suggestion
-            let titleSuggestion = '';
-            if (videoType === 'short') {
-                titleSuggestion = `Shorts: ${capitalizedTopic} in 60 Seconds! ⚡️`;
-            } else if (videoType === 'live') {
-                titleSuggestion = `LIVE: ${capitalizedTopic} Q&A & Demo! �`;
-            } else { // regular video
-                titleSuggestion = `How to ${capitalizedTopic} - Ultimate Guide | Tips & Tricks 🚀`;
-            }
-            outputTitle.value = titleSuggestion;
-
-            // Description Template
-            outputDescription.value = `
-👋 Welcome to this video about ${capitalizedTopic}!
-
-In this video, you'll learn:
-✅ [Key Point 1 related to ${videoTopic}]
-✅ [Key Point 2 related to ${videoTopic}]
-✅ [Key Point 3 related to ${videoTopic}]
-
-Whether you're a beginner or an expert, this guide will help you [achieve a specific goal related to ${videoTopic}].
-
-🔗 Useful Links:
-[Your Website/Blog Link]
-[Your Social Media Link 1]
-[Your Social Media Link 2]
-
-Don't forget to LIKE, COMMENT, and SUBSCRIBE for more ${capitalizedTopic} content!
-#${formattedTopic.replace(/-/g, '')} #Learn${formattedTopic.replace(/-/g, '')} #[YourNiche]
-            `.trim();
-
-            // Hashtag Suggestions
-            let hashtags = `#${formattedTopic.replace(/-/g, '')} #YouTube${videoType === 'short' ? 'Shorts' : videoType === 'live' ? 'Live' : 'Video'} #SEO #Tutorial #Guide #TipsAndTricks #HowTo${formattedTopic.replace(/-/g, '')}`;
-            if (videoTopic.includes("gaming")) {
-                hashtags += " #Gaming #Gamer #Gameplay";
-            } else if (videoTopic.includes("cooking")) {
-                hashtags += " #Cooking #Recipe #Foodie";
-            }
-            outputHashtags.value = hashtags;
-
-            // Keyword Tag Suggestions (aiming for around 500 chars with common structure)
-            let keywords = `${videoTopic}, ${videoTopic} tutorial, how to ${videoTopic}, learn ${videoTopic}, ${videoType} ${videoTopic}, best ${videoTopic}, ${capitalizedTopic} guide, tips for ${videoTopic}, ${videoTopic} explained, [specific long-tail keyword 1], [specific long-tail keyword 2], [common misspelling of topic], [related software/tool if applicable]`;
-            // Add more generic keywords to fill space
-            for (let i = 0; keywords.length < 450 && i < 10; i++) { // Aim for up to 450 to leave room for user additions
-                keywords += `, youtube seo, video marketing, content creation, online visibility, get more views, grow youtube channel`;
-            }
-            outputKeywords.value = keywords;
-
-            // Filename Suggestion
-            let filename = `${formattedTopic}-video-${videoType}-seo-guide.mp4`;
-            outputFilename.value = filename;
-        }
-    </script>
+      // Dummy logic (replace with your local AI or rules if offline use is needed)
+      document.getElementById('outputTitle').value = `Top Secrets About ${topic} You Didn\'t Know! 🔥`;
+      document.getElementById('outputDescription').value = `In this video, we explore everything you need to know about ${topic}. ${title ? 'We begin by looking at: ' + title + '.' : ''} ${context ? context : ''}`;
+      document.getElementById('outputHashtags').value = `#${topic.replace(/\s+/g, '')} #viral #YouTubeTips`;
+      document.getElementById('outputKeywords').value = `${topic}, viral video, YouTube SEO, video tips`;
+      document.getElementById('outputFilename').value = `${topic.toLowerCase().replace(/\s+/g, '-')}-seo-guide.mp4`;
+    });
+  </script>
 </body>
 </html>
