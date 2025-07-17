@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>YT SEO Pro - SEO Optimizer</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -243,9 +243,7 @@
     </div>
   </div>
   <div class="container">
-    <section class="video-type-selection" id="video-types">
-      <!-- Cards will be injected here -->
-    </section>
+    <section class="video-type-selection" id="video-types"></section>
     <section class="seo-form-section">
       <div class="seo-form-header">
         <span class="seo-header-icon">&#128196;</span>
@@ -279,11 +277,11 @@
     </section>
     <section class="seo-result-section" id="seo-results" style="display:none;">
       <h2>SEO Results</h2>
-      <div class="result-item"><span>&#128196;</span> <strong>Title:</strong> <span id="res-title"></span></div>
-      <div class="result-item"><span>&#128196;</span> <strong>Description:</strong> <span id="res-desc"></span></div>
-      <div class="result-item"><span>&#x23;</span> <strong>Hashtags:</strong> <span id="res-hashtags"></span></div>
-      <div class="result-item"><span>&#128278;</span> <strong>Keywords:</strong> <span id="res-keywords"></span></div>
-      <div class="result-item"><span>&#128459;</span> <strong>Filename:</strong> <span id="res-filename"></span></div>
+      <div class="result-item"><span>📄</span> <strong>Title:</strong> <span id="res-title"></span></div>
+      <div class="result-item"><span>📄</span> <strong>Description:</strong> <span id="res-desc"></span></div>
+      <div class="result-item"><span>#️⃣</span> <strong>Hashtags:</strong> <span id="res-hashtags"></span></div>
+      <div class="result-item"><span>🔖</span> <strong>Keywords:</strong> <span id="res-keywords"></span></div>
+      <div class="result-item"><span>🗋</span> <strong>Filename:</strong> <span id="res-filename"></span></div>
     </section>
   </div>
   <script>
@@ -353,6 +351,101 @@
     }
     renderVideoTypes();
 
+    // Helper: Capitalize each word
+    function titleCase(str) {
+      return str.replace(/\w\S*/g, function(txt){
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      });
+    }
+
+    // Helper: Emoji for popular games/topics
+    function getTopicEmoji(topic) {
+      const map = {
+        "roblox": "🎮",
+        "minecraft": "⛏️",
+        "fortnite": "🔥",
+        "valorant": "🎯",
+        "pubg": "🏆",
+        "live": "🔴",
+        "shorts": "📱",
+        "viewers": "👥",
+        "fun": "😄",
+        "game": "🎲",
+        "stream": "📺"
+      };
+      topic = topic.toLowerCase();
+      let emojis = "";
+      Object.keys(map).forEach(key => {
+        if(topic.includes(key)) emojis += map[key];
+      });
+      return emojis ? emojis : "✨";
+    }
+
+    // Human-like title generator
+    function generateTitle(title, topic, type) {
+      const emoji = getTopicEmoji(title + " " + topic);
+      let main = titleCase(topic || title);
+      if(type === "live") {
+        return `${emoji} Roblox Live: Playing Games With Viewers! | Join The Fun! 🔴`;
+      }
+      if(type === "short") {
+        return `${emoji} ${main} #Shorts | Watch Now!`;
+      }
+      return `${emoji} ${main} | ${titleCase(title)} | Don't Miss Out!`;
+    }
+
+    // Human-like description generator
+    function generateDescription(title, topic, audience, context, type) {
+      const emoji = getTopicEmoji(title + " " + topic);
+      let desc = "";
+      if(type === "live") {
+        desc = `${emoji} Welcome to the stream! Today, we're diving into some epic Roblox gameplay, and YOU get to join in! I'll be playing various Roblox games live with my amazing viewers 👥. Drop a comment, say hi in chat, and let's have some fun together! Don't forget to 👍 like this stream and subscribe for more live Roblox content!`;
+        if(audience) desc += `\n\nAudience: ${audience}`;
+        if(context) desc += `\n\nExtra: ${context}`;
+        return desc;
+      }
+      if(type === "short") {
+        desc = `${emoji} Check out this quick #Shorts: ${topic || title}! Hit like 👍 and subscribe for more awesome clips!`;
+        if(audience) desc += `\n\nAudience: ${audience}`;
+        if(context) desc += `\n\nExtra: ${context}`;
+        return desc;
+      }
+      desc = `${emoji} Welcome! In this video, I'm showcasing: ${topic || title}. Hope you enjoy and don't forget to like 👍 and subscribe for more content!`;
+      if(audience) desc += `\n\nAudience: ${audience}`;
+      if(context) desc += `\n\nExtra: ${context}`;
+      return desc;
+    }
+
+    // Hashtag generator
+    function generateHashtags(title, topic, type) {
+      let tags = ["#YouTube", "#SEO"];
+      if(type === "live") tags.push("#LiveStream");
+      if(type === "short") tags.push("#Shorts");
+      if(topic) {
+        topic.split(" ").forEach(w => {
+          if(w.length > 2) tags.push("#" + w.replace(/[^\w]/g,""));
+        });
+      }
+      tags.push("#Fun", "#Gaming");
+      return Array.from(new Set(tags)).join(" ");
+    }
+
+    // Keyword generator
+    function generateKeywords(title, topic, context, type) {
+      let keywords = [];
+      if(topic) keywords.push(...topic.split(" ").map(w => w.toLowerCase()));
+      if(context) keywords.push(...context.split(",").map(w => w.trim().toLowerCase()));
+      if(type === "live") keywords.push("live stream", "roblox", "gameplay", "viewers");
+      if(type === "short") keywords.push("shorts", "viral", "quick");
+      keywords.push("youtube seo");
+      return Array.from(new Set(keywords)).join(", ");
+    }
+
+    // Filename generator
+    function generateFilename(title, type) {
+      return `${title.replace(/[^a-zA-Z0-9]/g, "_")}_${type}.mp4`.replace(/__+/g,"_").toLowerCase();
+    }
+
     // Form logic
     document.getElementById("seo-form").addEventListener("submit", function(e){
       e.preventDefault();
@@ -361,28 +454,23 @@
       const audience = document.getElementById("audience").value.trim();
       const context = document.getElementById("context").value.trim();
 
-      if(!title || !topic) {
+      if(!title && !topic) {
         alert("Please fill out the required fields.");
         return;
       }
 
       // Generate SEO
-      const seoTitle = `${title} | ${topic}${selectedType === "short" ? " #Shorts" : ""}`;
-      const description = `Learn all about ${topic} for ${audience || "all audiences"}.\n${context}`;
-      const hashtags = ["#YouTube", "#SEO", "#Viral", ...topic.split(" ").map(w => "#" + w.replace(/[^\w]/g,""))];
-      const keywords = [
-        topic,
-        ...(context ? context.split(",").map(w => w.trim()) : []),
-        "YouTube SEO",
-        selectedType === "short" ? "Shorts" : selectedType === "live" ? "Live Stream" : "Regular Video"
-      ];
-      const filename = `${title.replace(/[^a-zA-Z0-9]/g, "_")}_${selectedType}.mp4`;
+      const seoTitle = generateTitle(title, topic, selectedType);
+      const description = generateDescription(title, topic, audience, context, selectedType);
+      const hashtags = generateHashtags(title, topic, selectedType);
+      const keywords = generateKeywords(title, topic, context, selectedType);
+      const filename = generateFilename(title || topic, selectedType);
 
       // Show results
       document.getElementById("res-title").textContent = seoTitle;
       document.getElementById("res-desc").textContent = description;
-      document.getElementById("res-hashtags").textContent = hashtags.join(" ");
-      document.getElementById("res-keywords").textContent = keywords.join(", ");
+      document.getElementById("res-hashtags").textContent = hashtags;
+      document.getElementById("res-keywords").textContent = keywords;
       document.getElementById("res-filename").textContent = filename;
 
       document.getElementById("seo-results").style.display = "block";
