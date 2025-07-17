@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube SEO Tool</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -276,7 +273,6 @@
         </div>
     </main>
 
-    <!-- Message Box for Copy Confirmation -->
     <div id="messageBox" class="message-box"></div>
 
     <script>
@@ -419,13 +415,15 @@
                     prompt = `Generate one comprehensive, engaging, SEO-friendly, and catchy YouTube video title for a ${videoType} video about "${videoTopic}". ${context} Incorporate trending and highly searchable keywords relevant to the topic, and include appropriate emojis to enhance click-through rate. Provide only the title text, no additional formatting or explanations.`;
                     break;
                 case 'description':
-                    prompt = `Generate one detailed, highly SEO-optimized YouTube video description for a ${videoType} video about "${videoTopic}". ${context} Include trending and highly searchable keywords naturally throughout the description. Provide a brief summary, key takeaways, and a clear call to action. Incorporate relevant emojis. Keep it under 5000 characters. Provide only the description text, no additional formatting or explanations.`;
+                    // Updated prompt for more detailed description
+                    prompt = `Generate one detailed, highly SEO-optimized YouTube video description for a ${videoType} video about "${videoTopic}". ${context} Include trending and highly searchable keywords naturally throughout the description. Provide a brief summary, key takeaways, a clear call to action, and relevant social media links (placeholder). Incorporate relevant emojis. Aim for a substantial description that provides value. Provide only the description text, no additional formatting or explanations.`;
                     break;
                 case 'hashtags':
                     prompt = `Generate 5-10 highly relevant, trending, and popular YouTube hashtags for a ${videoType} video about "${videoTopic}". ${context} Prioritize terms that are currently ranking high. Provide them as a space-separated string (e.g., #topic #related #keywords). Provide only the hashtags string, no additional formatting or explanations.`;
                     break;
                 case 'keywords':
-                    prompt = `Generate 10-15 highly relevant, trending, and searchable YouTube keyword tags for a ${videoType} video about "${videoTopic}". ${context} Prioritize terms that are currently ranking high and include long-tail keywords. Provide them as a comma-separated string (e.g., keyword1, keyword2, long tail keyword). Provide only the keyword tags string, no additional formatting or explanations.`;
+                    // Updated prompt for more comprehensive keyword tags
+                    prompt = `Generate a comprehensive list of YouTube keyword tags for a ${videoType} video about "${videoTopic}". ${context} Include a mix of short-tail, long-tail, and trending keywords that are highly searchable and relevant. Aim to provide enough tags to fill close to the 500-character limit for YouTube tags. Provide them as a comma-separated string (e.g., keyword1, keyword2, long tail keyword). Provide only the keyword tags string, no additional formatting or explanations.`;
                     break;
                 case 'filename':
                     prompt = `Generate one descriptive, SEO-friendly filename (e.g., "my-awesome-video-full-guide.mp4") for a ${videoType} video about "${videoTopic}". ${context} Use hyphens instead of spaces and keep it concise yet informative. Provide only the filename, no additional formatting or explanations.`;
@@ -435,7 +433,8 @@
             let chatHistory = [];
             chatHistory.push({ role: "user", parts: [{ text: prompt }] });
             const payload = { contents: chatHistory };
-            const apiKey = AIzaSyBHlH0IjtooogiV5WgguWmQf91KT9Dv2gE; // If you want to use models other than gemini-2.0-flash or imagen-3.0-generate-002, provide an API key here. Otherwise, leave this as-is.
+            // >>> IMPORTANT: REPLACE "YOUR_GEMINI_API_KEY" WITH YOUR ACTUAL GEMINI API KEY <<<
+            const apiKey = "AIzaSyBHlH0IjtooogiV5WgguWmQf91KT9Dv2gE"; // Your provided API key
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
             try {
@@ -452,8 +451,9 @@
                     const text = result.candidates[0].content.parts[0].text;
                     outputElement.value = text;
                 } else {
-                    outputElement.value = `No ${contentType} generated.`;
                     console.error(`Gemini API response missing content for ${contentType}:`, result);
+                    // Display a more informative error message to the user
+                    outputElement.value = `No ${contentType} generated. API response: ${JSON.stringify(result.error || result)}`;
                 }
             } catch (error) {
                 outputElement.value = `Error fetching ${contentType}.`;
