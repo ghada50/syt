@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube SEO Tool</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -202,27 +199,15 @@
         </div>
 
         <!-- Video Topic Input -->
-        <div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-                <label for="currentTitle" class="block text-gray-700 text-lg font-medium mb-2">Current Title (Optional):</label>
-                <input type="text" id="currentTitle" class="w-full" placeholder="Enter your current video title...">
-            </div>
-            <div>
-                <label for="videoTopic" class="block text-gray-700 text-lg font-medium mb-2">Main Topic:</label>
-                <input type="text" id="videoTopic" class="w-full" placeholder="What's your video about?">
-            </div>
-        </div>
-
-        <!-- Additional Context (Optional) -->
         <div class="mb-8">
-            <label for="additionalContext" class="block text-gray-700 text-lg font-medium mb-2">Additional Context (Optional):</label>
-            <textarea id="additionalContext" rows="3" class="w-full" placeholder="Any specific keywords, competitors, or additional information..."></textarea>
+            <label for="videoTopic" class="block text-gray-700 text-lg font-medium mb-2">Main Topic:</label>
+            <input type="text" id="videoTopic" class="w-full" placeholder="What's your video about? e.g., How to make sourdough bread">
         </div>
 
         <!-- Generate Button -->
         <div class="text-center mb-10">
             <button id="generateBtn" class="btn-primary flex items-center justify-center mx-auto">
-                Generate SEO Optimization
+                Generate SEO Suggestions
                 <div id="loadingSpinner" class="loading-spinner ml-3"></div>
             </button>
         </div>
@@ -231,8 +216,8 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Title -->
             <div class="p-6 card">
-                <label for="outputTitle" class="block text-gray-700 text-lg font-medium mb-3">YouTube Title:</label>
-                <textarea id="outputTitle" rows="2" class="w-full bg-gray-50" readonly></textarea>
+                <label for="outputTitle" class="block text-gray-700 text-lg font-medium mb-3">YouTube Title Suggestion:</label>
+                <textarea id="outputTitle" rows="2" class="w-full bg-gray-50" readonly placeholder="Your generated title will appear here."></textarea>
                 <button onclick="copyToClipboard('outputTitle')" class="btn-secondary mt-3 w-full">
                     <i class="fas fa-copy mr-2"></i> Copy Title
                 </button>
@@ -240,8 +225,8 @@
 
             <!-- Description -->
             <div class="p-6 card">
-                <label for="outputDescription" class="block text-gray-700 text-lg font-medium mb-3">YouTube Description:</label>
-                <textarea id="outputDescription" rows="6" class="w-full bg-gray-50" readonly></textarea>
+                <label for="outputDescription" class="block text-gray-700 text-lg font-medium mb-3">YouTube Description Template:</label>
+                <textarea id="outputDescription" rows="6" class="w-full bg-gray-50" readonly placeholder="Your generated description template will appear here."></textarea>
                 <button onclick="copyToClipboard('outputDescription')" class="btn-secondary mt-3 w-full">
                     <i class="fas fa-copy mr-2"></i> Copy Description
                 </button>
@@ -249,8 +234,8 @@
 
             <!-- Hashtags -->
             <div class="p-6 card">
-                <label for="outputHashtags" class="block text-gray-700 text-lg font-medium mb-3">YouTube Hashtags:</label>
-                <textarea id="outputHashtags" rows="3" class="w-full bg-gray-50" readonly></textarea>
+                <label for="outputHashtags" class="block text-gray-700 text-lg font-medium mb-3">YouTube Hashtag Suggestions:</label>
+                <textarea id="outputHashtags" rows="3" class="w-full bg-gray-50" readonly placeholder="Your generated hashtags will appear here."></textarea>
                 <button onclick="copyToClipboard('outputHashtags')" class="btn-secondary mt-3 w-full">
                     <i class="fas fa-copy mr-2"></i> Copy Hashtags
                 </button>
@@ -258,8 +243,8 @@
 
             <!-- Keyword Tags -->
             <div class="p-6 card">
-                <label for="outputKeywords" class="block text-gray-700 text-lg font-medium mb-3">YouTube Keyword Tags:</label>
-                <textarea id="outputKeywords" rows="3" class="w-full bg-gray-50" readonly></textarea>
+                <label for="outputKeywords" class="block text-gray-700 text-lg font-medium mb-3">YouTube Keyword Tag Suggestions:</label>
+                <textarea id="outputKeywords" rows="3" class="w-full bg-gray-50" readonly placeholder="Your generated keyword tags will appear here."></textarea>
                 <button onclick="copyToClipboard('outputKeywords')" class="btn-secondary mt-3 w-full">
                     <i class="fas fa-copy mr-2"></i> Copy Keyword Tags
                 </button>
@@ -267,8 +252,8 @@
 
             <!-- Filename -->
             <div class="p-6 card md:col-span-2">
-                <label for="outputFilename" class="block text-gray-700 text-lg font-medium mb-3">SEO-Friendly Filename:</label>
-                <textarea id="outputFilename" rows="1" class="w-full bg-gray-50" readonly></textarea>
+                <label for="outputFilename" class="block text-gray-700 text-lg font-medium mb-3">SEO-Friendly Filename Suggestion:</label>
+                <textarea id="outputFilename" rows="1" class="w-full bg-gray-50" readonly placeholder="Your generated filename will appear here."></textarea>
                 <button onclick="copyToClipboard('outputFilename')" class="btn-secondary mt-3 w-full">
                     <i class="fas fa-copy mr-2"></i> Copy Filename
                 </button>
@@ -276,15 +261,12 @@
         </div>
     </main>
 
-    <!-- Message Box for Copy Confirmation -->
     <div id="messageBox" class="message-box"></div>
 
     <script>
         const generateBtn = document.getElementById('generateBtn');
         const loadingSpinner = document.getElementById('loadingSpinner');
         const videoTopicInput = document.getElementById('videoTopic');
-        const currentTitleInput = document.getElementById('currentTitle');
-        const additionalContextInput = document.getElementById('additionalContext');
         const outputTitle = document.getElementById('outputTitle');
         const outputDescription = document.getElementById('outputDescription');
         const outputHashtags = document.getElementById('outputHashtags');
@@ -321,7 +303,6 @@
             }
         });
 
-
         // Function to show a temporary message
         function showMessage(message, type = 'success') {
             messageBox.textContent = message;
@@ -352,114 +333,84 @@
             }
         }
 
-        // Main generation logic
-        generateBtn.addEventListener('click', async () => {
+        // Main generation logic - now uses templates instead of API
+        generateBtn.addEventListener('click', () => {
             const videoType = document.querySelector('input[name="videoType"]:checked').value;
             const videoTopic = videoTopicInput.value.trim();
-            const currentTitle = currentTitleInput.value.trim();
-            const additionalContext = additionalContextInput.value.trim();
 
             if (!videoTopic) {
                 showMessage('Please enter the main video topic.', 'error');
                 return;
             }
 
-            loadingSpinner.style.display = 'block'; // Show spinner
+            loadingSpinner.style.display = 'block'; // Show spinner briefly
             generateBtn.disabled = true; // Disable button
 
-            // Clear previous outputs and set to "Generating..."
-            outputTitle.value = 'Generating...';
-            outputDescription.value = 'Generating...';
-            outputHashtags.value = 'Generating...';
-            outputKeywords.value = 'Generating...';
-            outputFilename.value = 'Generating...';
-
-            try {
-                // Generate Title
-                await generateContent('title', videoType, videoTopic, currentTitle, additionalContext, outputTitle);
-                // Generate Description
-                await generateContent('description', videoType, videoTopic, currentTitle, additionalContext, outputDescription);
-                // Generate Hashtags
-                await generateContent('hashtags', videoType, videoTopic, currentTitle, additionalContext, outputHashtags);
-                // Generate Keyword Tags
-                await generateContent('keywords', videoType, videoTopic, currentTitle, additionalContext, outputKeywords);
-                // Generate Filename
-                await generateContent('filename', videoType, videoTopic, currentTitle, additionalContext, outputFilename);
-
-                showMessage('Content generated successfully!');
-
-            } catch (error) {
-                console.error('Error generating content:', error);
-                showMessage('Error generating content. Please try again.', 'error');
-                // Set output fields to error message
-                outputTitle.value = 'Error generating title.';
-                outputDescription.value = 'Error generating description.';
-                outputHashtags.value = 'Error generating hashtags.';
-                outputKeywords.value = 'Error generating keywords.';
-                outputFilename.value = 'Error generating filename.';
-            } finally {
+            // Simulate generation time
+            setTimeout(() => {
+                populateOutputFields(videoType, videoTopic);
+                showMessage('Suggestions generated!');
                 loadingSpinner.style.display = 'none'; // Hide spinner
                 generateBtn.disabled = false; // Enable button
-            }
+            }, 800); // Short delay to show spinner
         });
 
-        // Function to call Gemini API
-        async function generateContent(contentType, videoType, videoTopic, currentTitle, additionalContext, outputElement) {
-            let prompt = '';
-            let context = '';
-            if (currentTitle) {
-                context += `The user's current video title is: "${currentTitle}". `;
-            }
-            if (additionalContext) {
-                context += `Additional context provided: "${additionalContext}".`;
-            }
+        // Function to populate output fields with template-based suggestions
+        function populateOutputFields(videoType, videoTopic) {
+            const formattedTopic = videoTopic.toLowerCase().replace(/\s+/g, '-');
+            const capitalizedTopic = videoTopic.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
-            switch (contentType) {
-                case 'title':
-                    prompt = `Generate one comprehensive, engaging, SEO-friendly, and catchy YouTube video title for a ${videoType} video about "${videoTopic}". ${context} Incorporate trending and highly searchable keywords relevant to the topic, and include appropriate emojis to enhance click-through rate. Provide only the title text, no additional formatting or explanations.`;
-                    break;
-                case 'description':
-                    prompt = `Generate one detailed, highly SEO-optimized YouTube video description for a ${videoType} video about "${videoTopic}". ${context} Include trending and highly searchable keywords naturally throughout the description. Provide a brief summary, key takeaways, and a clear call to action. Incorporate relevant emojis. Keep it under 5000 characters. Provide only the description text, no additional formatting or explanations.`;
-                    break;
-                case 'hashtags':
-                    prompt = `Generate 5-10 highly relevant, trending, and popular YouTube hashtags for a ${videoType} video about "${videoTopic}". ${context} Prioritize terms that are currently ranking high. Provide them as a space-separated string (e.g., #topic #related #keywords). Provide only the hashtags string, no additional formatting or explanations.`;
-                    break;
-                case 'keywords':
-                    prompt = `Generate 10-15 highly relevant, trending, and searchable YouTube keyword tags for a ${videoType} video about "${videoTopic}". ${context} Prioritize terms that are currently ranking high and include long-tail keywords. Provide them as a comma-separated string (e.g., keyword1, keyword2, long tail keyword). Provide only the keyword tags string, no additional formatting or explanations.`;
-                    break;
-                case 'filename':
-                    prompt = `Generate one descriptive, SEO-friendly filename (e.g., "my-awesome-video-full-guide.mp4") for a ${videoType} video about "${videoTopic}". ${context} Use hyphens instead of spaces and keep it concise yet informative. Provide only the filename, no additional formatting or explanations.`;
-                    break;
+            // Title Suggestion
+            let titleSuggestion = '';
+            if (videoType === 'short') {
+                titleSuggestion = `Shorts: ${capitalizedTopic} in 60 Seconds! ⚡️`;
+            } else if (videoType === 'live') {
+                titleSuggestion = `LIVE: ${capitalizedTopic} Q&A & Demo! �`;
+            } else { // regular video
+                titleSuggestion = `How to ${capitalizedTopic} - Ultimate Guide | Tips & Tricks 🚀`;
             }
+            outputTitle.value = titleSuggestion;
 
-            let chatHistory = [];
-            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-            const payload = { contents: chatHistory };
-            const apiKey = AIzaSyBHlH0IjtooogiV5WgguWmQf91KT9Dv2gE; // If you want to use models other than gemini-2.0-flash or imagen-3.0-generate-002, provide an API key here. Otherwise, leave this as-is.
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            // Description Template
+            outputDescription.value = `
+👋 Welcome to this video about ${capitalizedTopic}!
 
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const result = await response.json();
+In this video, you'll learn:
+✅ [Key Point 1 related to ${videoTopic}]
+✅ [Key Point 2 related to ${videoTopic}]
+✅ [Key Point 3 related to ${videoTopic}]
 
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    const text = result.candidates[0].content.parts[0].text;
-                    outputElement.value = text;
-                } else {
-                    outputElement.value = `No ${contentType} generated.`;
-                    console.error(`Gemini API response missing content for ${contentType}:`, result);
-                }
-            } catch (error) {
-                outputElement.value = `Error fetching ${contentType}.`;
-                console.error(`Error during Gemini API call for ${contentType}:`, error);
-                throw error; // Re-throw to be caught by the main generateBtn handler
+Whether you're a beginner or an expert, this guide will help you [achieve a specific goal related to ${videoTopic}].
+
+🔗 Useful Links:
+[Your Website/Blog Link]
+[Your Social Media Link 1]
+[Your Social Media Link 2]
+
+Don't forget to LIKE, COMMENT, and SUBSCRIBE for more ${capitalizedTopic} content!
+#${formattedTopic.replace(/-/g, '')} #Learn${formattedTopic.replace(/-/g, '')} #[YourNiche]
+            `.trim();
+
+            // Hashtag Suggestions
+            let hashtags = `#${formattedTopic.replace(/-/g, '')} #YouTube${videoType === 'short' ? 'Shorts' : videoType === 'live' ? 'Live' : 'Video'} #SEO #Tutorial #Guide #TipsAndTricks #HowTo${formattedTopic.replace(/-/g, '')}`;
+            if (videoTopic.includes("gaming")) {
+                hashtags += " #Gaming #Gamer #Gameplay";
+            } else if (videoTopic.includes("cooking")) {
+                hashtags += " #Cooking #Recipe #Foodie";
             }
+            outputHashtags.value = hashtags;
+
+            // Keyword Tag Suggestions (aiming for around 500 chars with common structure)
+            let keywords = `${videoTopic}, ${videoTopic} tutorial, how to ${videoTopic}, learn ${videoTopic}, ${videoType} ${videoTopic}, best ${videoTopic}, ${capitalizedTopic} guide, tips for ${videoTopic}, ${videoTopic} explained, [specific long-tail keyword 1], [specific long-tail keyword 2], [common misspelling of topic], [related software/tool if applicable]`;
+            // Add more generic keywords to fill space
+            for (let i = 0; keywords.length < 450 && i < 10; i++) { // Aim for up to 450 to leave room for user additions
+                keywords += `, youtube seo, video marketing, content creation, online visibility, get more views, grow youtube channel`;
+            }
+            outputKeywords.value = keywords;
+
+            // Filename Suggestion
+            let filename = `${formattedTopic}-video-${videoType}-seo-guide.mp4`;
+            outputFilename.value = filename;
         }
     </script>
 </body>
